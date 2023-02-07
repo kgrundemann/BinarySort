@@ -25,7 +25,7 @@ const BinarySort = () => {
     setData(newData);
   };
 
-  const handleSort = () => {
+  const handleBinarySort = () => {
     let sortedData = [...data];
     for (let i = 1; i < sortedData.length; i++) {
       let key = sortedData[i];
@@ -35,6 +35,49 @@ const BinarySort = () => {
         j = j - 1;
       }
       sortedData[j + 1] = key;
+    }
+    setData(sortedData);
+  };
+
+  const handleQuickSort = () => {
+    let sortedData = [...data];
+    quickSort(sortedData, 0, sortedData.length - 1);
+    setData(sortedData);
+  };
+
+  const quickSort = (arr, start, end) => {
+    if (start < end) {
+      let pivotIndex = partition(arr, start, end);
+      quickSort(arr, start, pivotIndex - 1);
+      quickSort(arr, pivotIndex + 1, end);
+    }
+    return arr;
+  };
+
+  const partition = (arr, start, end) => {
+    let pivot = arr[end];
+    let i = start - 1;
+    for (let j = start; j <= end - 1; j++) {
+      if (arr[j] <= pivot) {
+        i++;
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+    [arr[i + 1], arr[end]] = [arr[end], arr[i + 1]];
+    return i + 1;
+  };
+
+  const handleBubbleSort = () => {
+    let sortedData = [...data];
+    let n = sortedData.length;
+    for (let i = 0; i < n - 1; i++) {
+      for (let j = 0; j < n - i - 1; j++) {
+        if (sortedData[j] > sortedData[j + 1]) {
+          let temp = sortedData[j];
+          sortedData[j] = sortedData[j + 1];
+          sortedData[j + 1] = temp;
+        }
+      }
     }
     setData(sortedData);
   };
@@ -55,7 +98,9 @@ const BinarySort = () => {
         />
         <View style={styles.buttonContainer}>
           <Button title="Generate" onPress={handleAdd} />
-          <Button title="Sort" onPress={handleSort} />
+          <Button title="BinarySort" onPress={handleBinarySort} />
+          <Button title="QuickSort" onPress={handleQuickSort} />
+          <Button title="BubbleSort" onPress={handleBubbleSort} />
           <Button title="Clear" onPress={handleClear} />
         </View>
       </View>
@@ -85,7 +130,7 @@ const styles = StyleSheet.create({
     width: "60%",
   },
   buttonContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     padding: 10,
   },
   outputContainer: {
