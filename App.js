@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, ScrollView } from "react-native";
 import CustomButton from "./components/CustomButton";
 import BubbleSort from "./functions/BubbleSort";
-import BinarySearch from "./functions/BinarySearch";
+import InsertionSort from "./functions/InsertionSort";
 import QuickSort from "./functions/QuickSort";
 import GenerateData from "./functions/GenerateData";
 import GetStandardDeviation from "./functions/GetStandardDeviation";
@@ -25,12 +25,11 @@ const App = () => {
     let runtimes = [];
     for (let i = 0; i < numOfRuns; i++) {
       let start = performance.now();
-      testFunction(data);
+      setData(testFunction(data));
       let end = performance.now();
       let total = end - start;
       runtimes[i] = total;
     }
-
     let results = "Results for " + numOfRuns + " runs:\n";
     results += "Max: " + Math.max(...runtimes) + "\n";
     results += "Min: " + Math.min(...runtimes) + "\n";
@@ -42,6 +41,7 @@ const App = () => {
 
   const handleClear = () => {
     setData([]);
+    setResults("");
   };
 
   return (
@@ -71,10 +71,10 @@ const App = () => {
           />
           <CustomButton
             buttonColor="#536DFE"
-            title="BinarySort"
+            title="InsertionSort"
             buttonStyle={{ alignSelf: "center" }}
             textStyle={{ fontSize: 20 }}
-            onPress={() => runBenchmark(BinarySearch)}
+            onPress={() => runBenchmark(InsertionSort)}
           />
           <CustomButton
             buttonColor="#536DFE"

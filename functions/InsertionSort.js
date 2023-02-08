@@ -1,4 +1,4 @@
-const BinarySearch = (data) => {
+const InsertionSort = (data) => {
   let sortedData = [...data];
   for (let i = 1; i < sortedData.length; i++) {
     let key = sortedData[i];
@@ -12,4 +12,4 @@ const BinarySearch = (data) => {
   return sortedData;
 };
 
-export default BinarySearch;
+export default InsertionSort;
