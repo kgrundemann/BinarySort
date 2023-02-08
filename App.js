@@ -1,85 +1,43 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { View, Text, TextInput, StyleSheet, ScrollView } from "react-native";
+import CustomButton from "./components/CustomButton";
+import BubbleSort from "./functions/BubbleSort";
+import BinarySearch from "./functions/BinarySearch";
+import QuickSort from "./functions/QuickSort";
+import GenerateData from "./functions/GenerateData";
+import GetStandardDeviation from "./functions/GetStandardDeviation";
 
-const BinarySort = () => {
+const App = () => {
   const [data, setData] = useState([]);
-  const [value, setValue] = useState("");
   const [numElements, setNumElements] = useState(0);
+  const [numOfRuns, setNumOfRuns] = useState(0);
+  const [results, setResults] = useState("");
 
   const handleNumElements = (text) => {
     setNumElements(text);
   };
 
   const handleAdd = () => {
-    let newData = [];
-    for (let i = 0; i < numElements; i++) {
-      newData.push(Math.floor(Math.random() * 100));
-    }
-    setData(newData);
+    setData(GenerateData(numElements));
   };
 
-  const handleBinarySort = () => {
-    let sortedData = [...data];
-    for (let i = 1; i < sortedData.length; i++) {
-      let key = sortedData[i];
-      let j = i - 1;
-      while (j >= 0 && sortedData[j] > key) {
-        sortedData[j + 1] = sortedData[j];
-        j = j - 1;
-      }
-      sortedData[j + 1] = key;
+  const runBenchmark = (testFunction) => {
+    let runtimes = [];
+    for (let i = 0; i < numOfRuns; i++) {
+      let start = performance.now();
+      testFunction(data);
+      let end = performance.now();
+      let total = end - start;
+      runtimes[i] = total;
     }
-    setData(sortedData);
-  };
 
-  const handleQuickSort = () => {
-    let sortedData = [...data];
-    quickSort(sortedData, 0, sortedData.length - 1);
-    setData(sortedData);
-  };
-
-  const quickSort = (arr, start, end) => {
-    if (start < end) {
-      let pivotIndex = partition(arr, start, end);
-      quickSort(arr, start, pivotIndex - 1);
-      quickSort(arr, pivotIndex + 1, end);
-    }
-    return arr;
-  };
-
-  const partition = (arr, start, end) => {
-    let pivot = arr[end];
-    let i = start - 1;
-    for (let j = start; j <= end - 1; j++) {
-      if (arr[j] <= pivot) {
-        i++;
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-    }
-    [arr[i + 1], arr[end]] = [arr[end], arr[i + 1]];
-    return i + 1;
-  };
-
-  const handleBubbleSort = () => {
-    let sortedData = [...data];
-    let n = sortedData.length;
-    for (let i = 0; i < n - 1; i++) {
-      for (let j = 0; j < n - i - 1; j++) {
-        if (sortedData[j] > sortedData[j + 1]) {
-          let temp = sortedData[j];
-          sortedData[j] = sortedData[j + 1];
-          sortedData[j + 1] = temp;
-        }
-      }
-    }
-    setData(sortedData);
+    let results = "Results for " + numOfRuns + " runs:\n";
+    results += "Max: " + Math.max(...runtimes) + "\n";
+    results += "Min: " + Math.min(...runtimes) + "\n";
+    results +=
+      "Average: " + runtimes.reduce((a, b) => a + b, 0) / numOfRuns + "\n";
+    results += "StdDev: " + GetStandardDeviation(runtimes) + "\n";
+    setResults(results);
   };
 
   const handleClear = () => {
@@ -96,15 +54,53 @@ const BinarySort = () => {
           keyboardType="number-pad"
           style={styles.input}
         />
+        <TextInput
+          value={numOfRuns}
+          onChangeText={setNumOfRuns}
+          placeholder="Enter number of runs for test"
+          keyboardType="number-pad"
+          style={styles.input}
+        />
         <View style={styles.buttonContainer}>
-          <Button title="Generate" onPress={handleAdd} />
-          <Button title="BinarySort" onPress={handleBinarySort} />
-          <Button title="QuickSort" onPress={handleQuickSort} />
-          <Button title="BubbleSort" onPress={handleBubbleSort} />
-          <Button title="Clear" onPress={handleClear} />
+          <CustomButton
+            buttonColor="#536DFE"
+            title="Generate"
+            buttonStyle={{ alignSelf: "center" }}
+            textStyle={{ fontSize: 20 }}
+            onPress={handleAdd}
+          />
+          <CustomButton
+            buttonColor="#536DFE"
+            title="BinarySort"
+            buttonStyle={{ alignSelf: "center" }}
+            textStyle={{ fontSize: 20 }}
+            onPress={() => runBenchmark(BinarySearch)}
+          />
+          <CustomButton
+            buttonColor="#536DFE"
+            title="BubbleSort"
+            buttonStyle={{ alignSelf: "center" }}
+            textStyle={{ fontSize: 20 }}
+            onPress={() => runBenchmark(BubbleSort)}
+          />
+          <CustomButton
+            buttonColor="#536DFE"
+            title="QuickSort"
+            buttonStyle={{ alignSelf: "center" }}
+            textStyle={{ fontSize: 20 }}
+            onPress={() => runBenchmark(QuickSort)}
+          />
+          <CustomButton
+            buttonColor="#536DFE"
+            title="Clear"
+            buttonStyle={{ alignSelf: "center" }}
+            textStyle={{ fontSize: 20 }}
+            onPress={handleClear}
+          />
         </View>
       </View>
       <View style={styles.outputContainer}>
+        <Text style={styles.result}>{results}</Text>
         {data.map((item, index) => (
           <Text key={index} style={styles.output}>
             {item}
@@ -134,16 +130,26 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   outputContainer: {
+    flex: 1,
     width: "100%",
-    alignItems: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    padding: 20,
+    textAlign: "center",
+  },
+  result: {
+    padding: 20,
+    fontSize: 20,
+    fontWeight: "bold",
   },
   output: {
     padding: 10,
-    marginBottom: 10,
+    margin: 10,
     borderWidth: 1,
     borderRadius: 5,
-    width: "70%",
+    width: "15%",
+    textAlign: "center",
   },
 });
 
-export default BinarySort;
+export default App;
