@@ -4,6 +4,8 @@ import HomeScreen from "./screens/HomeScreen";
 import SortingScreen from "./screens/SortingScreen";
 import FibonacciScreen from "./screens/FibonacciScreen";
 import PrimeNumbersScreen from "./screens/PrimeNumbersScreen";
+import ButtonsGeneratorScreen from "./screens/ButtonsGeneratorScreen";
+import StringGeneratorScreen from "./screens/StringGenerator";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +32,16 @@ export default function App() {
           name="PrimeNumbersScreen"
           component={PrimeNumbersScreen}
           options={{ title: "Prime Numbers" }}
+        />
+        <Stack.Screen
+          name="ButtonsGeneratorScreen"
+          component={ButtonsGeneratorScreen}
+          options={{ title: "Buttons Generator" }}
+        />
+        <Stack.Screen
+          name="StringGeneratorScreen"
+          component={StringGeneratorScreen}
+          options={{ title: "String Generator" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -25,6 +25,21 @@ export default function HomeScreen({ navigation }) {
           onPress={() => navigation.navigate("PrimeNumbersScreen")}
         />
       </View>
+      <View style={styles.buttonContainer}>
+        <Button
+          style={styles.button}
+          title="Navigate to Button Generator Screen"
+          onPress={() => navigation.navigate("ButtonsGeneratorScreen")}
+        />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button
+          style={styles.button}
+          title="Navigate to String Generator Screen"
+          onPress={() => navigation.navigate("StringGeneratorScreen")}
+        />
+      </View>
+
       <StatusBar style="auto" />
     </View>
   );
@@ -43,7 +58,11 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingVertical: 15,
+    width: "100%",
     backgroundColor: "#fff",
     borderRadius: 5,
+    elevation: 2,
+    alignSelf: "stretch",
+    textAlign: "center",
   },
 });
