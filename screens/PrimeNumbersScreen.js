@@ -1,50 +1,52 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { Text, TextInput, Button, StyleSheet, ScrollView } from "react-native";
+import calculatePrimeNumbers from "../functions/PrimeNumbers";
+import { runBenchmark } from "../functions/Benchmark";
 
 const PrimeNumbersScreen = () => {
-  const [count, setCount] = useState(0);
+  const [numElements, setNumElements] = useState(0);
   const [result, setResult] = useState([]);
+  const [results, setResults] = useState("");
+  const [numOfRuns, setNumOfRuns] = useState(0);
 
-  const calculatePrimeNumbers = () => {
-    let primes = [];
-    let num = 2;
-
-    while (primes.length < count) {
-      let isPrime = true;
-      for (let i = 2; i <= Math.sqrt(num); i++) {
-        if (num % i === 0) {
-          isPrime = false;
-          break;
-        }
-      }
-      if (isPrime) {
-        primes.push(num);
-      }
-      num++;
-    }
-    setResult(primes);
+  const handleBenchmark = () => {
+    const { results, sortedData } = runBenchmark(
+      calculatePrimeNumbers,
+      numElements,
+      numOfRuns
+    );
+    setResults(results);
+    setResult(sortedData);
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.inputLabel}>
-        Enter the number of prime numbers you want to generate:
-      </Text>
+    <ScrollView style={styles.container}>
       <TextInput
-        keyboardType="numeric"
+        value={numElements}
+        onChangeText={setNumElements}
+        placeholder="Enter number of elements"
+        keyboardType="number-pad"
         style={styles.input}
-        onChangeText={(text) => setCount(Number(text))}
-        value={count.toString()}
       />
-      <Button title="Generate Prime Numbers" onPress={calculatePrimeNumbers} />
+      <TextInput
+        value={numOfRuns}
+        onChangeText={setNumOfRuns}
+        placeholder="Enter number of runs for test"
+        keyboardType="number-pad"
+        style={styles.input}
+      />
+      <Button title="Generate Prime Numbers" onPress={handleBenchmark} />
+      <Text style={styles.result}>{results}</Text>
       <Text style={styles.result}>{result.join(", ")}</Text>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 20,
+    margin: 20,
   },
   inputLabel: {
     fontSize: 16,

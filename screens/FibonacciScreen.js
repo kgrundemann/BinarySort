@@ -1,37 +1,43 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button } from "react-native";
-
+import { runBenchmark } from "../functions/Benchmark";
+import calculateFibonacci from "../functions/Fibonacci";
 
 const FibonacciScreen = () => {
   const [input, setInput] = useState("");
   const [result, setResult] = useState(0);
+  const [numOfRuns, setNumOfRuns] = useState(0);
+  const [results, setResults] = useState("");
 
-  const calculateFibonacci = (n) => {
-    let a = 0,
-      b = 1,
-      temp;
-    for (let i = 0; i < n; i++) {
-      temp = a;
-      a = b;
-      b = temp + b;
-    }
-    return a;
-  };
-
-  const handleSubmit = () => {
-    setResult(calculateFibonacci(input));
+  const handleBenchmark = () => {
+    const { results, sortedData } = runBenchmark(
+      calculateFibonacci,
+      input,
+      numOfRuns
+    );
+    setResults(results);
+    setResult(sortedData);
   };
 
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.input}
-        keyboardType="numeric"
         value={input}
-        onChangeText={(text) => setInput(text)}
+        onChangeText={setInput}
+        placeholder="Enter number"
+        keyboardType="number-pad"
+        style={styles.input}
       />
-      <Button title="Oblicz" onPress={handleSubmit} />
-      <Text style={styles.result}>Wynik: {result}</Text>
+      <TextInput
+        value={numOfRuns}
+        onChangeText={setNumOfRuns}
+        placeholder="Enter number of runs"
+        keyboardType="number-pad"
+        style={styles.input}
+      />
+      <Button title="Calculate" onPress={handleBenchmark} />
+      <Text style={styles.result}>{results}</Text>
+      <Text style={styles.result}>Result: {result}</Text>
     </View>
   );
 };

@@ -11,7 +11,7 @@ import BubbleSort from "../functions/BubbleSort";
 import InsertionSort from "../functions/InsertionSort";
 import QuickSort from "../functions/QuickSort";
 import GenerateData from "../functions/GenerateData";
-import GetStandardDeviation from "../functions/GetStandardDeviation";
+import { runBenchmark } from "../functions/Benchmark";
 
 const SortingScreen = () => {
   const [data, setData] = useState([]);
@@ -27,27 +27,15 @@ const SortingScreen = () => {
     setData(GenerateData(numElements));
   };
 
-  const runBenchmark = (testFunction) => {
-    let runtimes = [];
-    for (let i = 0; i < numOfRuns; i++) {
-      let start = performance.now();
-      setData(testFunction(data));
-      let end = performance.now();
-      let total = end - start;
-      runtimes[i] = total;
-    }
-    let results = "Results for " + numOfRuns + " runs:\n";
-    results += "Max: " + Math.max(...runtimes) + "\n";
-    results += "Min: " + Math.min(...runtimes) + "\n";
-    results +=
-      "Average: " + runtimes.reduce((a, b) => a + b, 0) / numOfRuns + "\n";
-    results += "StdDev: " + GetStandardDeviation(runtimes) + "\n";
-    setResults(results);
-  };
-
   const handleClear = () => {
     setData([]);
     setResults("");
+  };
+
+  const handleBenchmark = (testFunction) => {
+    const { results, sortedData } = runBenchmark(testFunction, data, numOfRuns);
+    setResults(results);
+    setData(sortedData);
   };
 
   return (
@@ -72,17 +60,17 @@ const SortingScreen = () => {
           <Button
             style={styles.button}
             title="InsertionSort"
-            onPress={() => runBenchmark(InsertionSort)}
+            onPress={() => handleBenchmark(InsertionSort)}
           />
           <Button
             style={styles.button}
             title="BubbleSort"
-            onPress={() => runBenchmark(BubbleSort)}
+            onPress={() => handleBenchmark(BubbleSort)}
           />
           <Button
             style={styles.button}
             title="QuickSort"
-            onPress={() => runBenchmark(QuickSort)}
+            onPress={() => handleBenchmark(QuickSort)}
           />
           <Button style={styles.button} title="Clear" onPress={handleClear} />
         </View>
