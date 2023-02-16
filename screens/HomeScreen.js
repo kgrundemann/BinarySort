@@ -28,8 +28,8 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.buttonContainer}>
         <Button
           style={styles.button}
-          title="Navigate to Button Generator Screen"
-          onPress={() => navigation.navigate("ButtonsGeneratorScreen")}
+          title="Navigate to Elements Generator Screen"
+          onPress={() => navigation.navigate("ElementsGeneratorScreen")}
         />
       </View>
       <View style={styles.buttonContainer}>

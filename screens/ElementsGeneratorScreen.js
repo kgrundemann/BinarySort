@@ -10,7 +10,7 @@ import {
 import { RadioButton } from "react-native-paper";
 import { runBenchmark } from "../functions/Benchmark";
 
-const ButtonsGeneratorScreen = () => {
+const ElementsGeneratorScreen = () => {
   const [quantity, setQuantity] = useState(0);
   const [selectedOption, setSelectedOption] = useState("buttons");
   const [shouldGenerate, setShouldGenerate] = useState(false);
@@ -163,4 +163,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ButtonsGeneratorScreen;
+export default ElementsGeneratorScreen;
